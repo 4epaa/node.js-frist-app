@@ -1,9 +1,10 @@
 {
   "name": "bookstore-api",
   "version": "1.0.0",
+  "main": "index.js",
   "scripts": {
-    "start": "node app.js",
-    "dev": "nodemon app.js"
+    "start": "node index.js",
+    "dev": "nodemon index.js"
   },
   "dependencies": {
     "@vercel/speed-insights": "^2.0.0",
