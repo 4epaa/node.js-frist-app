@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BookStore SaaS Portal</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+  <div id="authContainer" class="auth-wrapper">
+    <div id="loginView" class="auth-card">
+      <div class="auth-header">
+        <i class="fa-solid fa-book-bookmark brand-icon"></i>
+        <h2>Welcome Back</h2>
+        <p>Sign in to manage your library catalog</p>
+      </div>
+      <form id="loginForm">
+        <div class="input-group">
+          <i class="fa-regular fa-envelope"></i>
+          <input type="email" id="loginEmail" placeholder="Email address" required>
+        </div>
+        <div class="input-group">
+          <i class="fa-solid fa-lock"></i>
+          <input type="password" id="loginPassword" placeholder="Password" required>
+        </div>
+        <button type="submit" class="btn-primary">Sign In</button>
+      </form>
+      <p class="switch-auth">Don't have an account? <a href="#" onclick="showAuthView('registerView')">Register</a></p>
+    </div>
+
+    <div id="registerView" class="auth-card hidden">
+      <div class="auth-header">
+        <i class="fa-solid fa-user-plus brand-icon"></i>
+        <h2>Create Account</h2>
+        <p>Join to access full bookstore features</p>
+      </div>
+      <form id="registerForm">
+        <div class="input-group">
+          <i class="fa-regular fa-user"></i>
+          <input type="text" id="regName" placeholder="Full name" required>
+        </div>
+        <div class="input-group">
+          <i class="fa-regular fa-envelope"></i>
+          <input type="email" id="regEmail" placeholder="Email address" required>
+        </div>
+        <div class="input-group">
+          <i class="fa-solid fa-lock"></i>
+          <input type="password" id="regPassword" placeholder="Password" required>
+        </div>
+        <div class="input-group">
+          <i class="fa-solid fa-shield-halved"></i>
+          <select id="regRole">
+            <option value="user">User Account</option>
+            <option value="admin">Administrator Account</option>
+          </select>
+        </div>
+        <button type="submit" class="btn-primary">Create Account</button>
+      </form>
+      <p class="switch-auth">Already registered? <a href="#" onclick="showAuthView('loginView')">Login</a></p>
+    </div>
+  </div>
+
+  <div id="appLayout" class="app-layout hidden">
+    <aside class="sidebar">
+      <div class="sidebar-brand">
+        <i class="fa-solid fa-book-bookmark"></i>
+        <span>BookStore</span>
+      </div>
+      <nav class="sidebar-menu">
+        <a href="#" class="nav-item active" onclick="navigateTo('booksPage', event)">
+          <i class="fa-solid fa-books"></i> Books Catalog
+        </a>
+        <a href="#" class="nav-item" onclick="navigateTo('addBookPage', event)">
+          <i class="fa-solid fa-square-plus"></i> Add New Book
+        </a>
+        <a href="#" class="nav-item" onclick="navigateTo('authorsPage', event)">
+          <i class="fa-solid fa-user-pen"></i> Authors Management
+        </a>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="user-profile">
+          <div class="avatar" id="userAvatar">U</div>
+          <div class="profile-info">
+            <span id="userName" class="profile-name">User</span>
+            <span id="userRole" class="profile-role">ROLE</span>
+          </div>
+        </div>
+        <button class="btn-logout" onclick="logout()" title="Logout">
+          <i class="fa-solid fa-arrow-right-from-bracket"></i>
+        </button>
+      </div>
+    </aside>
+
+    <main class="main-viewport">
+      
+      <section id="booksPage" class="page-section">
+        <div class="page-header">
+          <div>
+            <h1>Books Catalog</h1>
+            <p>Browse, search, and manage bookstore inventory</p>
+          </div>
+          <div class="search-bar-wrapper">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" id="searchInput" placeholder="Search books by title (Real-time)...">
+          </div>
+        </div>
+        <div class="card-container">
+          <div id="booksGrid" class="books-grid"></div>
+        </div>
+      </section>
+
+      <section id="addBookPage" class="page-section hidden">
+        <div class="page-header">
+          <h1>Add New Book</h1>
+          <p>Create and publish a new book entry</p>
+        </div>
+        <div class="form-card">
+          <form id="bookForm">
+            <div class="form-group">
+              <label>Book Title</label>
+              <input type="text" id="bookTitle" placeholder="e.g. Clean Architecture" required>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Price ($)</label>
+                <input type="number" id="bookPrice" placeholder="29.99" step="0.01" required>
+              </div>
+              <div class="form-group">
+                <label>Select Author</label>
+                <select id="authorSelect" required>
+                  <option value="">Choose an author...</option>
+                </select>
+              </div>
+            </div>
+            <button type="submit" class="btn-primary">Publish Book</button>
+          </form>
+        </div>
+      </section>
+
+      <section id="authorsPage" class="page-section hidden">
+        <div class="page-header">
+          <h1>Authors Management</h1>
+          <p>Add new authors or view existing ones</p>
+        </div>
+        <div class="grid-two-columns">
+          <div class="form-card">
+            <h3>Add Author</h3>
+            <form id="authorForm">
+              <div class="form-group">
+                <label>Author Name</label>
+                <input type="text" id="authorName" placeholder="e.g. Robert C. Martin" required>
+              </div>
+              <div class="form-group">
+                <label>Author Email</label>
+                <input type="email" id="authorEmail" placeholder="author@example.com" required>
+              </div>
+              <button type="submit" class="btn-primary">Save Author</button>
+            </form>
+          </div>
+          <div class="list-card">
+            <h3>Registered Authors</h3>
+            <ul id="authorsList" class="authors-list"></ul>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
