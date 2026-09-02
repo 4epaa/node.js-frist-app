@@ -16,12 +16,26 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static(path.join(__dirname, "public")));
 
-const DATABASE_URL = process.env.DATABASE_URL;
-if (DATABASE_URL) {
-  mongoose.connect(DATABASE_URL)
-    .then(() => console.log("Database connected successfully"))
-    .catch((err) => console.error("Database connection failed", err));
-}
+let isConnected = false;
+const connectDB = async () => {
+  if (isConnected || mongoose.connections[0].readyState) {
+    isConnected = true;
+    return;
+  }
+  if (process.env.DATABASE_URL) {
+    await mongoose.connect(process.env.DATABASE_URL);
+    isConnected = true;
+  }
+};
+
+app.use(async (req, res, next) => {
+  try {
+    await connectDB();
+    next();
+  } catch (err) {
+    next(err);
+  }
+});
 
 app.get("/health", (req, res) => {
   res.status(200).json({ status: "OK" });
@@ -36,10 +50,9 @@ app.use((req, res) => {
 });
 
 app.use((err, req, res, next) => {
-  const isProduction = process.env.NODE_ENV === "production";
   res.status(500).json({
     success: false,
-    message: isProduction ? "Internal Server Error" : err.message
+    message: err.message || "Internal Server Error"
   });
 });
 
